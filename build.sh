@@ -7,8 +7,8 @@ PHONE="Lavender"
 DEFCONFIG=lavender-perf_defconfig
 COMPILERDIR="$(pwd)/../proton-clang"
 CLANG="Proton Clang"
-CODENAME="[Shogun]"
-ZIPNAME="InazumaKernel-$CODENAME-Lavender-$(date '+%Y%m%d-%H%M').zip"
+CODENAME="[八重神子]"
+ZIPNAME="Inazuma-$CODENAME-Lavender-$(date '+%Y%m%d-%H%M').zip"
 CAPTION="Inazuma Kernel Compile Complete"
 BOT_TOKEN="-"
 CHAT_ID="-"
@@ -63,7 +63,6 @@ URL="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
 
 # Data yang akan dikirimkan
 DATA="chat_id=$CHAT_ID&text=$MESSAGE"
-DATA_ERR="chat_id=$CHAT_ID&text=$MESSAGE_ERROR"
 
 # Kirim permintaan POST ke API Telegram
 curl -s -X POST "$URL" -d "$DATA"
@@ -73,7 +72,7 @@ KERN_IMG="out/arch/arm64/boot/Image.gz-dtb" # Direktori image-gz.dtb atau image.
 
 function clean() {
     echo -e "\n"
-    echo -e "$red [!] CLEANING UP \\033[0m"
+    echo -e "$red[!] CLEANING UP \\033[0m"
     echo -e "\n"
     rm -rf out
     make mrproper
@@ -141,13 +140,13 @@ fi
     echo -e "$green=  Defconfig  : $DEFCONFIG \033[0m"
     echo -e "$green=  Toolchain  : $CLANG \033[0m"
     echo -e "$green=  Codename   : $CODENAME \033[0m"
-    echo -e "$green=  New Driver : $ZIPNAME \033[0m"
+    echo -e "$green=  Zipname    : $ZIPNAME \033[0m"
     echo -e "$green=  Completed in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) \033[0m "
     echo -e "$green=  Have A Brick Day Nihahahah \033[0m"
     echo -e "$green===========================\033[0m"
     else
     echo -e "$red [!] FIX YOUR KERNEL SOURCE BRUH !?\033[0m"
-    curl -s -X POST "$URL" -F document=@"log.txt" -F caption="$DATA_ERR" -F chat_id="$CHAT_ID"
+    send_log
     fi
 
     if [ -e "$ZIPNAME" ] ; then 
@@ -161,6 +160,20 @@ fi
 
     fi
 }
+
+# Fungsi untuk mengirim pesan dengan file
+function send_log() {
+    # File yang ingin dikirim
+    FILE="log.txt"
+
+    # URL untuk mengirim file dengan caption
+    URL="https://api.telegram.org/bot$BOT_TOKEN/sendDocument"
+
+    # Perintah curl untuk mengirim file
+    curl -F "chat_id=$CHAT_ID" -F "document=@${FILE}" -F "caption=${MESSAGE_ERROR}" $URL
+
+}
+
 
 # execute
 clean
